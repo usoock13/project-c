@@ -2,13 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+enum PlayerState {
+    Idle,
+    Run,
+    Slide,
+    Jump,
+    Attack
+}
 public class Player : MonoBehaviour
 {
+    PlayerState playerState = PlayerState.Idle;
+
     Rigidbody playerRigidbody;
     Animator playerAnimator;
     public GameObject playerAvatar;
 
-    float moveSpeed = 10f;
+    float moveSpeed = 5f;
 
     void Start() {
         playerRigidbody = GetComponent<Rigidbody>();
@@ -24,6 +33,10 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void Idle(){
+
+    }
+
     public void Move(Vector3 direction) {
         // Position
         Vector3 addPosition = transform.TransformDirection(direction);
@@ -35,5 +48,9 @@ public class Player : MonoBehaviour
 
         // Animation
         playerAnimator.SetBool("Running", true);
+    }
+    
+    void AnimationController() {
+        
     }
 }

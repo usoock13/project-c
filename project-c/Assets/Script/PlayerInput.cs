@@ -8,7 +8,7 @@ public class PlayerInput : MonoBehaviour
     void Awake() {
         playerScript = GetComponent<Player>();
     }
-    void Update()
+    void FixedUpdate()
     {
         MoveInput();
     }
@@ -19,6 +19,8 @@ public class PlayerInput : MonoBehaviour
         if(xx!=0 || yy!=0) {
             Vector3 direction = new Vector3(xx, 0, yy).normalized;
             playerScript.Move(direction);
+        } else {
+            
         }
     }
 }
