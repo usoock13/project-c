@@ -7,7 +7,8 @@ enum PlayerState {
     Run,
     Slide,
     Jump,
-    Attack
+    Attack,
+    SmashAttack
 }
 public class Player : MonoBehaviour
 {
@@ -35,7 +36,8 @@ public class Player : MonoBehaviour
 
     public void Move(Vector3 direction) {
         if(
-            playerState == PlayerState.Attack
+            playerState == PlayerState.Attack ||
+            playerState == PlayerState.SmashAttack
         ) { return; }
         // Position
         Vector3 addPosition = transform.TransformDirection(direction);
@@ -53,7 +55,8 @@ public class Player : MonoBehaviour
 
     public void Attack(Vector3 targetPosition) {
         if(
-            playerState == PlayerState.Attack
+            playerState == PlayerState.Attack ||
+            playerState == PlayerState.SmashAttack
         ) { return; }
         StartCoroutine(AttackCoroutine(targetPosition));
     }
@@ -73,13 +76,46 @@ public class Player : MonoBehaviour
         // playerAnimator.speed = .25f;
         // yield return new WaitForSeconds(.3f);
 
-        playerAnimator.speed = 1f;
+        playerAnimator.speed = .5f;
         yield return new WaitForSeconds(.05f);
+        playerAnimator.speed = 1f;
 
         playerState = PlayerState.Idle;
         playerAnimator.SetBool("Attack", false);
     }
+
+    public void SmashAttack(Vector3 targetPosition) {
+        if(
+            playerState == PlayerState.Attack ||
+            playerState == PlayerState.SmashAttack
+        ) { return; }
+        StartCoroutine(SmashAttackCoroutine(targetPosition));
+    }
+    IEnumerator SmashAttackCoroutine(Vector3 targetPosition) {
+        Vector3 target = targetPosition;
+        target.y = playerAvatar.transform.position.y;
+        playerAvatar.transform.LookAt(target);
+        playerState = PlayerState.SmashAttack;
+        playerAnimator.SetBool("SmashAttack", true);
+
+        playerAnimator.speed = 3.5f;
+        yield return new WaitForSeconds(.4f);
+
+        //playerAnimator.speed = 1f;
+        // yield return new WaitForSeconds(.25f);
+
+        // playerAnimator.speed = .25f;
+        // yield return new WaitForSeconds(.3f);
+
+        playerAnimator.speed = .3f;
+        yield return new WaitForSeconds(.05f);
+        playerAnimator.speed = 1f;
+
+        playerState = PlayerState.Idle;
+        playerAnimator.SetBool("SmashAttack", false);
+    }
     
+
     void AnimationController() {
         
     }
