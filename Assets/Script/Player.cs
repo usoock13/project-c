@@ -64,18 +64,18 @@ public class Player : MonoBehaviour
         playerState = PlayerState.Attack;
         playerAnimator.SetBool("Attack", true);
 
+        playerAnimator.speed = 3.5f;
+        yield return new WaitForSeconds(.4f);
 
-        yield return new WaitForSeconds(.17f);
-        playerAnimator.speed = .35f;
-        yield return new WaitForSeconds(.22f);
+        //playerAnimator.speed = 1f;
+        // yield return new WaitForSeconds(.25f);
 
-        playerAnimator.speed = 2f;
-        yield return new WaitForSeconds(.25f);
-
-        playerAnimator.speed = .25f;
-        yield return new WaitForSeconds(.3f);
+        // playerAnimator.speed = .25f;
+        // yield return new WaitForSeconds(.3f);
 
         playerAnimator.speed = 1f;
+        yield return new WaitForSeconds(.05f);
+
         playerState = PlayerState.Idle;
         playerAnimator.SetBool("Attack", false);
     }

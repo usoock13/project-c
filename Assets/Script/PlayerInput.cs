@@ -25,7 +25,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
     void AttackInput() {
-        if(Input.GetMouseButtonDown(0)) {
+        if(Input.GetMouseButton(0)) {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
