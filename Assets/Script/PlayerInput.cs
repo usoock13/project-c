@@ -5,14 +5,15 @@ using UnityEngine;
 public class PlayerInput : MonoBehaviour
 {
     Player playerScript;
+
     void Awake() {
         playerScript = GetComponent<Player>();
     }
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         MoveInput();
+        AttackInput();
     }
-    void MoveInput(){
+    void MoveInput() {
         float xx = Input.GetAxisRaw("Horizontal");
         float yy = Input.GetAxisRaw("Vertical");
 
@@ -21,6 +22,16 @@ public class PlayerInput : MonoBehaviour
             playerScript.Move(direction);
         } else {
             
+        }
+    }
+    void AttackInput() {
+        if(Input.GetMouseButtonDown(0)) {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
+                playerScript.Attack(hit.point);
+            }
         }
     }
 }

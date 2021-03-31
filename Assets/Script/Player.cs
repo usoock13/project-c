@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     Animator playerAnimator;
     public GameObject playerAvatar;
 
-    float moveSpeed = 5f;
+    float moveSpeed = 7f;
 
     void Start() {
         playerRigidbody = GetComponent<Rigidbody>();
@@ -29,25 +29,55 @@ public class Player : MonoBehaviour
         float yy = Input.GetAxisRaw("Vertical");
 
         if(xx==0 && yy==0) {
-            playerAnimator.SetBool("Running", false);
+            playerAnimator.SetBool("Run", false);
         }
     }
 
-    public void Idle(){
-
-    }
-
     public void Move(Vector3 direction) {
+        if(
+            playerState == PlayerState.Attack
+        ) { return; }
         // Position
         Vector3 addPosition = transform.TransformDirection(direction);
-        playerRigidbody.MovePosition(transform.position + (addPosition * Time.deltaTime * moveSpeed));
+        // playerRigidbody.MovePosition(transform.position + (addPosition * Time.deltaTime * moveSpeed));
+        transform.Translate(direction * Time.deltaTime * moveSpeed);
         
         // Rotate
         Vector3 rotateTarget = transform.TransformDirection(direction);
         playerAvatar.transform.rotation = Quaternion.Slerp(playerAvatar.transform.rotation, Quaternion.LookRotation(rotateTarget), Time.deltaTime * 10f);
 
         // Animation
-        playerAnimator.SetBool("Running", true);
+        playerAnimator.SetBool("Run", true);
+        playerState = PlayerState.Run;
+    }
+
+    public void Attack(Vector3 targetPosition) {
+        if(
+            playerState == PlayerState.Attack
+        ) { return; }
+        StartCoroutine(AttackCoroutine(targetPosition));
+    }
+    IEnumerator AttackCoroutine(Vector3 targetPosition) {
+        Vector3 target = targetPosition;
+        target.y = playerAvatar.transform.position.y;
+        playerAvatar.transform.LookAt(target);
+        playerState = PlayerState.Attack;
+        playerAnimator.SetBool("Attack", true);
+
+
+        yield return new WaitForSeconds(.17f);
+        playerAnimator.speed = .35f;
+        yield return new WaitForSeconds(.22f);
+
+        playerAnimator.speed = 2f;
+        yield return new WaitForSeconds(.25f);
+
+        playerAnimator.speed = .25f;
+        yield return new WaitForSeconds(.3f);
+
+        playerAnimator.speed = 1f;
+        playerState = PlayerState.Idle;
+        playerAnimator.SetBool("Attack", false);
     }
     
     void AnimationController() {
