@@ -7,11 +7,18 @@ enum PlayerState {
     Run,
     Slide,
     Jump,
-    Attack
+    Attack,
+    AfterAttack
 }
+
 public class Player : MonoBehaviour
 {
     PlayerState playerState = PlayerState.Idle;
+    int maxComboNumber = 3;
+    int currenCombo = 0;
+    bool comboable = false;
+
+    IEnumerator attackCoroutine;
 
     Rigidbody playerRigidbody;
     Animator playerAnimator;
@@ -35,7 +42,8 @@ public class Player : MonoBehaviour
 
     public void Move(Vector3 direction) {
         if(
-            playerState == PlayerState.Attack
+            playerState == PlayerState.Attack || 
+            playerState == PlayerState.AfterAttack
         ) { return; }
         // Position
         Vector3 addPosition = transform.TransformDirection(direction);
@@ -55,7 +63,8 @@ public class Player : MonoBehaviour
         if(
             playerState == PlayerState.Attack
         ) { return; }
-        StartCoroutine(AttackCoroutine(targetPosition));
+        attackCoroutine = AttackCoroutine(targetPosition);
+        StartCoroutine(attackCoroutine);
     }
     IEnumerator AttackCoroutine(Vector3 targetPosition) {
         Vector3 target = targetPosition;
@@ -63,21 +72,59 @@ public class Player : MonoBehaviour
         playerAvatar.transform.LookAt(target);
         playerState = PlayerState.Attack;
         playerAnimator.SetBool("Attack", true);
+        currenCombo = currenCombo + 1;
 
+        switch(currenCombo) {
+            case 1:
+                playerAnimator.SetInteger("Combo", currenCombo);
+                playerAnimator.speed = 2.2f;
+                yield return new WaitForSeconds(.22f);
 
-        yield return new WaitForSeconds(.17f);
-        playerAnimator.speed = .35f;
-        yield return new WaitForSeconds(.22f);
+                playerAnimator.speed = .5f;
+                playerState = PlayerState.AfterAttack;
+                yield return new WaitForSeconds(.5f);
 
-        playerAnimator.speed = 2f;
-        yield return new WaitForSeconds(.25f);
+                if(currenCombo == 1) {
+                    playerAnimator.speed = 1f;
+                    playerState = PlayerState.Idle;
+                    playerAnimator.SetBool("Attack", false);
+                    currenCombo = 0;
+                }
+                break;
+            case 2:
+                playerAnimator.SetInteger("Combo", currenCombo);
+                playerAnimator.speed = 1.7f;
+                yield return new WaitForSeconds(.22f);
 
-        playerAnimator.speed = .25f;
-        yield return new WaitForSeconds(.3f);
+                playerAnimator.speed = .5f;
+                playerState = PlayerState.AfterAttack;
+                yield return new WaitForSeconds(.5f);
 
-        playerAnimator.speed = 1f;
-        playerState = PlayerState.Idle;
-        playerAnimator.SetBool("Attack", false);
+                if(currenCombo == 2) {
+                    playerAnimator.speed = 1f;
+                    playerState = PlayerState.Idle;
+                    playerAnimator.SetBool("Attack", false);
+                    currenCombo = 0;
+                }
+                break;
+            case 3:
+                playerAnimator.SetInteger("Combo", currenCombo);
+                playerAnimator.speed = 2.2f;
+                yield return new WaitForSeconds(.30f);
+
+                playerAnimator.speed = .5f;
+                yield return new WaitForSeconds(.5f);
+
+                if(currenCombo == 3) {
+                    playerAnimator.speed = 1f;
+                    playerState = PlayerState.Idle;
+                    playerAnimator.SetBool("Attack", false);
+                    currenCombo = 0;
+                }
+                break;
+            default : 
+                break;
+        }
     }
     
     void AnimationController() {
