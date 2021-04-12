@@ -10,7 +10,6 @@ public class Enemy : MonoBehaviour
     public AnimationCurve curve;
     public AnimationClip anim;
     NavMeshAgent agent;
-    public AnimationUtility au;
 
     void Start() {
         

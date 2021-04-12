@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 enum PlayerState {
     Idle,
@@ -15,7 +16,6 @@ public class Player : MonoBehaviour
 {
     PlayerState playerState = PlayerState.Idle;
     int maxComboNumber = 3;
-    int currenCombo = 0;
     bool comboable = false;
 
     IEnumerator attackCoroutine;
@@ -23,12 +23,14 @@ public class Player : MonoBehaviour
     Rigidbody playerRigidbody;
     Animator playerAnimator;
     public GameObject playerAvatar;
+    Text countText;
 
     float moveSpeed = 7f;
 
     void Start() {
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = playerAvatar.GetComponent<Animator>();
+        countText = GetComponentInChildren<Text>();
     }
     void Update()
     {
@@ -60,9 +62,7 @@ public class Player : MonoBehaviour
     }
 
     public void Attack(Vector3 targetPosition) {
-        if(
-            playerState == PlayerState.Attack
-        ) { return; }
+        if(playerState == PlayerState.Attack) return;
         attackCoroutine = AttackCoroutine(targetPosition);
         StartCoroutine(attackCoroutine);
     }
@@ -72,59 +72,15 @@ public class Player : MonoBehaviour
         playerAvatar.transform.LookAt(target);
         playerState = PlayerState.Attack;
         playerAnimator.SetBool("Attack", true);
-        currenCombo = currenCombo + 1;
+        yield return new WaitForSeconds(1f);
+        playerState = PlayerState.Idle;
+        playerAnimator.SetBool("Attack", false);
+    }
 
-        switch(currenCombo) {
-            case 1:
-                playerAnimator.SetInteger("Combo", currenCombo);
-                playerAnimator.speed = 2.2f;
-                yield return new WaitForSeconds(.22f);
-
-                playerAnimator.speed = .5f;
-                playerState = PlayerState.AfterAttack;
-                yield return new WaitForSeconds(.5f);
-
-                if(currenCombo == 1) {
-                    playerAnimator.speed = 1f;
-                    playerState = PlayerState.Idle;
-                    playerAnimator.SetBool("Attack", false);
-                    currenCombo = 0;
-                }
-                break;
-            case 2:
-                playerAnimator.SetInteger("Combo", currenCombo);
-                playerAnimator.speed = 1.7f;
-                yield return new WaitForSeconds(.22f);
-
-                playerAnimator.speed = .5f;
-                playerState = PlayerState.AfterAttack;
-                yield return new WaitForSeconds(.5f);
-
-                if(currenCombo == 2) {
-                    playerAnimator.speed = 1f;
-                    playerState = PlayerState.Idle;
-                    playerAnimator.SetBool("Attack", false);
-                    currenCombo = 0;
-                }
-                break;
-            case 3:
-                playerAnimator.SetInteger("Combo", currenCombo);
-                playerAnimator.speed = 2.2f;
-                yield return new WaitForSeconds(.30f);
-
-                playerAnimator.speed = .5f;
-                yield return new WaitForSeconds(.5f);
-
-                if(currenCombo == 3) {
-                    playerAnimator.speed = 1f;
-                    playerState = PlayerState.Idle;
-                    playerAnimator.SetBool("Attack", false);
-                    currenCombo = 0;
-                }
-                break;
-            default : 
-                break;
-        }
+    int eventCount = 0;
+    public void AnimationEvent() {
+        print(++eventCount);
+        countText.text = "count : " + eventCount;
     }
     
     void AnimationController() {

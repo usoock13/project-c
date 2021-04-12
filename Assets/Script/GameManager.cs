@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 
     public float gravityAcceleration = 9.8f;
 
+    void Awake() {
+        Application.targetFrameRate = 60;
+    }
+
     void Start() {
         
     }
