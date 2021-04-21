@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using EzySlice;
 
 enum PlayerState {
     Idle,
@@ -17,6 +18,10 @@ public class Player : MonoBehaviour
     Rigidbody playerRigidbody;
     Animator playerAnimator;
     public GameObject playerAvatar;
+
+    public Transform cutPlane;
+    public LayerMask layerMask;
+    public Material crossMaterial;
 
     float moveSpeed = 7f;
 
@@ -66,6 +71,7 @@ public class Player : MonoBehaviour
         playerAvatar.transform.LookAt(target);
         playerState = PlayerState.Attack;
         playerAnimator.SetBool("Attack", true);
+        Slice();
 
         playerAnimator.speed = 3.5f;
         yield return new WaitForSeconds(.4f);
@@ -114,9 +120,47 @@ public class Player : MonoBehaviour
         playerState = PlayerState.Idle;
         playerAnimator.SetBool("SmashAttack", false);
     }
-    
 
-    void AnimationController() {
-        
+    public void Slice()
+    {
+        Debug.Log("Slice()");
+        Collider[] hits = Physics.OverlapBox(cutPlane.position, new Vector3(5, 0.1f, 5), cutPlane.rotation, layerMask);
+
+        if (hits.Length <= 0)
+            Debug.Log("Has no slice obj");
+            return;
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            SlicedHull hull = SliceObject(hits[i].gameObject, crossMaterial);
+            if (hull != null)
+            {
+                GameObject bottom = hull.CreateLowerHull(hits[i].gameObject, crossMaterial);
+                GameObject top = hull.CreateUpperHull(hits[i].gameObject, crossMaterial);
+                AddHullComponents(bottom);
+                AddHullComponents(top);
+                Destroy(hits[i].gameObject);
+            }
+        }
+    }
+
+    public void AddHullComponents(GameObject go)
+    {
+        go.layer = 9;
+        Rigidbody rb = go.AddComponent<Rigidbody>();
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        MeshCollider collider = go.AddComponent<MeshCollider>();
+        collider.convex = true;
+
+        rb.AddExplosionForce(100, go.transform.position, 20);
+    }
+
+    public SlicedHull SliceObject(GameObject obj, Material crossSectionMaterial = null)
+    {
+        // slice the provided object using the transforms of this object
+        if (obj.GetComponent<MeshFilter>() == null)
+            return null;
+
+        return obj.Slice(cutPlane.position, cutPlane.up, crossSectionMaterial);
     }
 }
