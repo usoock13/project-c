@@ -1,11 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-<<<<<<< HEAD
 using UnityEngine.UI;
-=======
 using EzySlice;
->>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb
 
 enum PlayerState {
     Idle,
@@ -13,11 +10,7 @@ enum PlayerState {
     Slide,
     Jump,
     Attack,
-<<<<<<< HEAD
-    AfterAttack
-=======
     SmashAttack
->>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb
 }
 
 public class Player : MonoBehaviour
@@ -56,13 +49,8 @@ public class Player : MonoBehaviour
 
     public void Move(Vector3 direction) {
         if(
-<<<<<<< HEAD
-            playerState == PlayerState.Attack || 
-            playerState == PlayerState.AfterAttack
-=======
             playerState == PlayerState.Attack ||
             playerState == PlayerState.SmashAttack
->>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb
         ) { return; }
         // Position
         Vector3 addPosition = transform.TransformDirection(direction);
@@ -79,17 +67,11 @@ public class Player : MonoBehaviour
     }
 
     public void Attack(Vector3 targetPosition) {
-<<<<<<< HEAD
-        if(playerState == PlayerState.Attack) return;
-        attackCoroutine = AttackCoroutine(targetPosition);
-        StartCoroutine(attackCoroutine);
-=======
         if(
             playerState == PlayerState.Attack ||
             playerState == PlayerState.SmashAttack
         ) { return; }
         StartCoroutine(AttackCoroutine(targetPosition));
->>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb
     }
     IEnumerator AttackCoroutine(Vector3 targetPosition) {
         Vector3 target = targetPosition;
@@ -97,9 +79,6 @@ public class Player : MonoBehaviour
         playerAvatar.transform.LookAt(target);
         playerState = PlayerState.Attack;
         playerAnimator.SetBool("Attack", true);
-<<<<<<< HEAD
-        yield return new WaitForSeconds(1f);
-=======
         Slice();
 
         playerAnimator.speed = 3.5f;
@@ -113,23 +92,11 @@ public class Player : MonoBehaviour
 
         playerAnimator.speed = .5f;
         yield return new WaitForSeconds(.05f);
-        playerAnimator.speed = 1f;
 
->>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb
+        playerAnimator.speed = 1f;
         playerState = PlayerState.Idle;
         playerAnimator.SetBool("Attack", false);
     }
-
-<<<<<<< HEAD
-    int eventCount = 0;
-    public void AnimationEvent() {
-        print(++eventCount);
-        countText.text = "count : " + eventCount;
-    }
-    
-    void AnimationController() {
-        
-=======
     public void SmashAttack(Vector3 targetPosition) {
         if(
             playerState == PlayerState.Attack ||
@@ -163,22 +130,27 @@ public class Player : MonoBehaviour
 
     public void Slice()
     {
-        Debug.Log("Slice()");
+        // Debug.Log("Slice()");
         Collider[] hits = Physics.OverlapBox(cutPlane.position, new Vector3(5, 0.1f, 5), cutPlane.rotation, layerMask);
 
-        if (hits.Length <= 0)
-            Debug.Log("Has no slice obj");
+        if (hits.Length <= 0) {
+            // Debug.Log("Has no slice obj");
             return;
+        }
 
         for (int i = 0; i < hits.Length; i++)
         {
+            GameObject target = hits[i].gameObject;
             SlicedHull hull = SliceObject(hits[i].gameObject, crossMaterial);
+            
             if (hull != null)
             {
                 GameObject bottom = hull.CreateLowerHull(hits[i].gameObject, crossMaterial);
                 GameObject top = hull.CreateUpperHull(hits[i].gameObject, crossMaterial);
                 AddHullComponents(bottom);
                 AddHullComponents(top);
+                bottom.layer = 8;
+                top.layer = 8;
                 Destroy(hits[i].gameObject);
             }
         }
@@ -202,6 +174,5 @@ public class Player : MonoBehaviour
             return null;
 
         return obj.Slice(cutPlane.position, cutPlane.up, crossSectionMaterial);
->>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb
     }
 }
