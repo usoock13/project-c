@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class DestroyableObject : MonoBehaviour
 {
-    void Start()
-    {
-        
+    public delegate void BreakDelegate(Vector3 attackerPosition);
+    public BreakDelegate breakDelegate;
+    public void OnDamage(Vector3 attackerPosition) {
+        OnBreak(attackerPosition);
     }
-
-    void Update()
-    {
-        
+    public void OnBreak(Vector3 attackerPosition) {
+        breakDelegate(attackerPosition);
+        GetComponent<BoxCollider>().enabled = false;
     }
 }

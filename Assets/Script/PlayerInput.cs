@@ -12,7 +12,6 @@ public class PlayerInput : MonoBehaviour
     void FixedUpdate() {
         MoveInput();
         AttackInput();
-        SmashAttackInput();
     }
     void MoveInput() {
         float xx = Input.GetAxisRaw("Horizontal");
@@ -32,16 +31,6 @@ public class PlayerInput : MonoBehaviour
 
             if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
                 playerScript.Attack(hit.point);
-            }
-        }
-    }
-    void SmashAttackInput() {
-        if(Input.GetMouseButton(1)) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
-                playerScript.SmashAttack(hit.point);
             }
         }
     }

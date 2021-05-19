@@ -85,7 +85,7 @@ Material:
     - Vector1_1ADD5A43: 630
     - Vector1_6CDE42CF: 112
     - Vector1_7A45703: 757
-    - Vector1_C6DC8276: 51.2
+    - Vector1_C6DC8276: 63.3
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -98,6 +98,7 @@ Material:
     - _Glossiness: 0.7
     - _GlossyReflections: 0
     - _Height: 3
+    - _HeightPercent: 100
     - _Melting1Range: 0.06
     - _Melting2Range: 0.47
     - _Metallic: 1
