@@ -9,6 +9,6 @@ public class AnimationEvent : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
     }
     public void Event() {
-        player.AnimationEvent();
+        // player.AnimationEvent();
     }
 }

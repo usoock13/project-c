@@ -73,5 +73,9 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
+<<<<<<< HEAD:Assets/UnityToonshader_ProjectURP~/Assets/UniversalRP/UnityChan/SD_unitychan/Models/Materials/def_mat.mat
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+=======
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
+>>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb:Assets/Models/Materials/Beta_Joints_MAT.mat
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Assets/Models/sward.meta
 guid: 09ed40e03caa56b49a893796c16c3e12
+=======
+guid: 8e369a1781ce3354fb33c8967ae14191
+>>>>>>> d3d7029e4c0dd8e576e5759b37f218569609f6bb:Assets/MeleeWeaponTrail.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
