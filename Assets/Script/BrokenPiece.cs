@@ -5,6 +5,7 @@ using UnityEngine;
 public class BrokenPiece : MonoBehaviour
 {
     DestroyableObject parent;
+    public float power = 100f;
     void Start() {
         parent = transform.parent.GetComponent<DestroyableObject>();
         parent.breakDelegate += BreakObject;
@@ -12,6 +13,6 @@ public class BrokenPiece : MonoBehaviour
 
     void BreakObject(Vector3 attackerPosition) {
         GetComponent<Rigidbody>().isKinematic = false;
-        GetComponent<Rigidbody>().AddForce((transform.position - attackerPosition).normalized * 100f);
+        GetComponent<Rigidbody>().AddForce((transform.position - attackerPosition).normalized * power);
     }
 }
