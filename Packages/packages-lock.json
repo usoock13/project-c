@@ -109,7 +109,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.toonshader": {
-      "version": "file:C:/Users/user/Desktop/private/unity/package/com.unity.toonshader-development-v1/com.unity.toonshader",
+      "version": "file:D:/user/Desktop/Unity-Plug-In(package)/com.unity.toonshader-development-v1/com.unity.toonshader-development-v1/com.unity.toonshader",
       "depth": 0,
       "source": "local",
       "dependencies": {}
